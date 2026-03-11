@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<title>Controle de Visitantes - Pesquisa Clínica</title>
+
+<script src="BrowserPrint-3.1.250.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<style>
+
+body{
+font-family: Arial;
+margin:40px;
+background:#f4f4f4;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+table{
+border-collapse: collapse;
+width:100%;
+background:white;
+}
+
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:left;
+}
+
+th{
+background:#2c3e50;
+color:white;
+}
+
+button{
+padding:6px 12px;
+border:none;
+cursor:pointer;
+border-radius:4px;
+}
+
+.imprimir{
+background:#27ae60;
+color:white;
+}
+
+.impresso{
+background:#95a5a6;
+color:white;
+cursor:default;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Visitantes aguardando crachá</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Nome</th>
+<th>Tipo de visita</th>
+<th>Estudo</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="tabela"></tbody>
+
+</table>
+
+<script>
+
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSNtcjxYDCz_7brdXFebxJ2gzM3AfN47o7pz1zNUDzajhKUcsA_wX6ZCurO9dffDkuuzV87msFOYHES/pub?gid=1855995648&single=true&output=csv";
+
+let impressos = {};
+
+function gerarZPL(nome, empresa, estudo, id){
+
+return `
+^XA
+^CI28
+^PW400
+^LL240
+
+^FO30,30^A0N,25,25^FDVISITANTE^FS
+
+^FO30,70^A0N,30,30^FD${nome}^FS
+
+^FO30,120^A0N,20,20^FD${empresa}^FS
+
+^FO30,150^A0N,20,20^FD${estudo}^FS
+
+^FO30,190^A0N,15,15^FD${id}^FS
+
+^XZ
+`;
+
+}
+
+function imprimir(nome,empresa,estudo,id,botao){
+
+if(impressos[id]) return;
+
+BrowserPrint.getDefaultDevice("printer", function(device){
+
+let zpl = gerarZPL(nome,empresa,estudo,id);
+
+device.send(zpl);
+
+impressos[id] = true;
+
+botao.innerText = "Impresso";
+botao.className = "impresso";
+
+});
+
+}
+
+async function carregar(){
+
+let resposta = await fetch(CSV_URL);
+
+let texto = await resposta.text();
+
+let resultado = Papa.parse(texto,{
+header:true,
+skipEmptyLines:true
+});
+
+let tabela = document.getElementById("tabela");
+
+resultado.data.reverse().forEach((linha,index)=>{
+
+let nome = linha["Nome do visitante"];
+let tipo = linha["Tipo de visita"];
+let estudo = linha["Estudo / Protocolo"];
+let id = linha["ID_VISITA"] || ("VIS-"+index);
+
+if(!nome) return;
+
+let tr = document.createElement("tr");
+
+let status = impressos[id] ? "Impresso" : "";
+
+tr.innerHTML = `
+<td>${nome}</td>
+<td>${tipo}</td>
+<td>${estudo}</td>
+<td>
+<button class="imprimir" onclick="imprimir('${nome}','${tipo}','${estudo}','${id}',this)">
+Imprimir
+</button>
+</td>
+`;
+
+tabela.appendChild(tr);
+
+});
+
+}
+
+carregar();
+
+</script>
+
+</body>
+</html>
