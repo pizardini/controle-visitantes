@@ -3,7 +3,6 @@
 <head>
 
 <meta charset="UTF-8">
-
 <title>Controle de Visitantes - Pesquisa Clínica</title>
 
 <script src="BrowserPrint-3.1.250.min.js"></script>
@@ -18,6 +17,10 @@ background:#f4f4f4;
 }
 
 h2{
+margin-bottom:10px;
+}
+
+.filtro{
 margin-bottom:20px;
 }
 
@@ -38,6 +41,10 @@ background:#2c3e50;
 color:white;
 }
 
+tr.novo{
+background:#fff8dc;
+}
+
 button{
 padding:6px 12px;
 border:none;
@@ -50,10 +57,9 @@ background:#27ae60;
 color:white;
 }
 
-.impresso{
-background:#95a5a6;
+.reimprimir{
+background:#f39c12;
 color:white;
-cursor:default;
 }
 
 </style>
@@ -64,14 +70,22 @@ cursor:default;
 
 <h2>Visitantes aguardando crachá</h2>
 
+<div class="filtro">
+<label>
+<input type="checkbox" id="apenasNaoImpressos">
+Mostrar apenas visitantes sem crachá
+</label>
+</div>
+
 <table>
 
 <thead>
 <tr>
+<th>Hora de Preenchimento</th>
 <th>Nome</th>
 <th>Tipo de visita</th>
 <th>Estudo</th>
-<th>Status</th>
+<th>Ação</th>
 </tr>
 </thead>
 
@@ -94,13 +108,9 @@ return `
 ^LL240
 
 ^FO30,30^A0N,25,25^FDVISITANTE^FS
-
 ^FO30,70^A0N,30,30^FD${nome}^FS
-
 ^FO30,120^A0N,20,20^FD${empresa}^FS
-
 ^FO30,150^A0N,20,20^FD${estudo}^FS
-
 ^FO30,190^A0N,15,15^FD${id}^FS
 
 ^XZ
@@ -110,7 +120,15 @@ return `
 
 function imprimir(nome,empresa,estudo,id,botao){
 
-if(impressos[id]) return;
+if(impressos[id]){
+
+let confirmar = confirm("Você tem certeza que deseja reimprimir esse crachá?");
+
+if(!confirmar){
+return;
+}
+
+}
 
 BrowserPrint.getDefaultDevice("printer", function(device){
 
@@ -120,8 +138,41 @@ device.send(zpl);
 
 impressos[id] = true;
 
-botao.innerText = "Impresso";
-botao.className = "impresso";
+botao.innerText = "Reimprimir";
+botao.className = "reimprimir";
+
+});
+
+}
+
+function extrairHora(timestamp){
+
+if(!timestamp) return "";
+
+let data = new Date(timestamp);
+
+let horas = String(data.getHours()).padStart(2,'0');
+let minutos = String(data.getMinutes()).padStart(2,'0');
+
+return `${horas}:${minutos}`;
+
+}
+
+function aplicarFiltro(){
+
+let apenas = document.getElementById("apenasNaoImpressos").checked;
+
+let linhas = document.querySelectorAll("#tabela tr");
+
+linhas.forEach(linha=>{
+
+let id = linha.dataset.id;
+
+if(apenas && impressos[id]){
+linha.style.display = "none";
+}else{
+linha.style.display = "";
+}
 
 });
 
@@ -130,7 +181,6 @@ botao.className = "impresso";
 async function carregar(){
 
 let resposta = await fetch(CSV_URL);
-
 let texto = await resposta.text();
 
 let resultado = Papa.parse(texto,{
@@ -138,28 +188,43 @@ header:true,
 skipEmptyLines:true
 });
 
+let dados = resultado.data;
+
+dados.sort((a,b)=>{
+return new Date(b["Carimbo de data/hora"]) - new Date(a["Carimbo de data/hora"]);
+});
+
 let tabela = document.getElementById("tabela");
 
-resultado.data.reverse().forEach((linha,index)=>{
+dados.forEach((linha,index)=>{
 
 let nome = linha["Nome do visitante"];
 let tipo = linha["Tipo de visita"];
 let estudo = linha["Estudo / Protocolo"];
 let id = linha["ID_VISITA"] || ("VIS-"+index);
+let hora = extrairHora(linha["Carimbo de data/hora"]);
 
 if(!nome) return;
 
 let tr = document.createElement("tr");
 
-let status = impressos[id] ? "Impresso" : "";
+tr.dataset.id = id;
+
+let classe = impressos[id] ? "" : "novo";
+
+let textoBotao = impressos[id] ? "Reimprimir" : "Imprimir";
+let classeBotao = impressos[id] ? "reimprimir" : "imprimir";
+
+tr.className = classe;
 
 tr.innerHTML = `
+<td>${hora}</td>
 <td>${nome}</td>
 <td>${tipo}</td>
 <td>${estudo}</td>
 <td>
-<button class="imprimir" onclick="imprimir('${nome}','${tipo}','${estudo}','${id}',this)">
-Imprimir
+<button class="${classeBotao}" onclick="imprimir('${nome}','${tipo}','${estudo}','${id}',this)">
+${textoBotao}
 </button>
 </td>
 `;
@@ -169,6 +234,8 @@ tabela.appendChild(tr);
 });
 
 }
+
+document.getElementById("apenasNaoImpressos").addEventListener("change", aplicarFiltro);
 
 carregar();
 
