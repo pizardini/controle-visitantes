@@ -44,7 +44,7 @@ return data >= dataInicio && data <= dataFim;
 
 }
 
-function gerarZPL(nome,empresa,estudo,id){
+function gerarZPL(nome,empresa,setor,id){
 
 let tamanho = document.getElementById("tamanhoEtiqueta").value;
 
@@ -58,8 +58,7 @@ return `
 
 ^FO30,30^A0N,25,25^FDVISITANTE^FS
 ^FO30,70^A0N,30,30^FD${nome}^FS
-^FO30,120^A0N,20,20^FD${empresa}^FS
-^FO30,150^A0N,20,20^FD${estudo}^FS
+^FO30,150^A0N,20,20^FD${empresa}^FS
 ^FO30,180^A0N,20,20^FD${id}^FS
 
 ^XZ
@@ -77,8 +76,7 @@ return `
 
 ^FO40,30^A0N,40,40^FDVISITANTE^FS
 ^FO40,100^A0N,50,50^FD${nome}^FS
-^FO40,180^A0N,30,30^FD${empresa}^FS
-^FO40,220^A0N,30,30^FD${estudo}^FS
+^FO40,220^A0N,30,30^FD${empresa}^FS
 ^FO40,270^A0N,30,30^FD${id}^FS
 
 ^XZ
@@ -94,7 +92,7 @@ return "impresso_"+id+"_"+data;
 
 }
 
-function imprimir(nome,empresa,estudo,id,botao){
+function imprimir(nome,empresa,setor,id,botao){
 
 let data = document.getElementById("dataFiltro").value;
 
@@ -110,7 +108,7 @@ if(!confirmar) return;
 
 BrowserPrint.getDefaultDevice("printer", function(device){
 
-let zpl = gerarZPL(nome,empresa,estudo,id);
+let zpl = gerarZPL(nome,empresa,setor,id);
 
 device.send(zpl);
 
@@ -139,7 +137,8 @@ dados.forEach((linha,index)=>{
 
 let nome = linha.nome;
 let tipo = linha.tipo;
-let estudo = linha.estudo;
+let setor = linha.setor;
+let empresa = linha.estudo;
 let inicio = linha.inicio;
 let fim = linha.fim;
 let id = linha.id;
@@ -159,10 +158,11 @@ let tr = document.createElement("tr");
 tr.innerHTML=`
 <td>${nome}</td>
 <td>${tipo}</td>
-<td>${estudo}</td>
+<td>${empresa}</td>
+<td>${setor}</td>
 <td>${periodo}</td>
 <td>
-<button class="${classe}" onclick="imprimir('${nome}','${tipo}','${estudo}','${id}',this)">
+<button class="${classe}" onclick="imprimir('${nome}','${tipo}','${empresa}','${id}',this)">
 ${textoBotao}
 </button>
 </td>
