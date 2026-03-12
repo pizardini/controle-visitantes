@@ -1,90 +1,39 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <meta charset="UTF-8">
-<title>Controle de Visitantes - Pesquisa Clínica</title>
+<title>Controle de Visitantes</title>
+
+<link rel="stylesheet" href="style.css">
 
 <script src="BrowserPrint-3.1.250.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-<style>
-
-body{
-font-family: Arial;
-margin:40px;
-background:#f4f4f4;
-}
-
-h2{
-margin-bottom:10px;
-}
-
-.filtro{
-margin-bottom:20px;
-}
-
-table{
-border-collapse: collapse;
-width:100%;
-background:white;
-}
-
-th,td{
-border:1px solid #ddd;
-padding:10px;
-text-align:left;
-}
-
-th{
-background:#2c3e50;
-color:white;
-}
-
-tr.novo{
-background:#fff8dc;
-}
-
-button{
-padding:6px 12px;
-border:none;
-cursor:pointer;
-border-radius:4px;
-}
-
-.imprimir{
-background:#27ae60;
-color:white;
-}
-
-.reimprimir{
-background:#f39c12;
-color:white;
-}
-
-</style>
 
 </head>
 
 <body>
 
-<h2>Visitantes aguardando crachá</h2>
+<h2>Controle de Visitantes – Pesquisa Clínica</h2>
 
 <div class="filtro">
-<label>
-<input type="checkbox" id="apenasNaoImpressos">
-Mostrar apenas visitantes sem crachá
-</label>
+
+<label>Data da visita:</label>
+<input type="date" id="dataFiltro">
+
+<button onclick="carregar()">Atualizar lista</button>
+
 </div>
 
 <table>
 
 <thead>
 <tr>
-<th>Hora de Preenchimento</th>
 <th>Nome</th>
-<th>Tipo de visita</th>
+<th>Tipo</th>
 <th>Estudo</th>
+<th>Período da visita</th>
 <th>Ação</th>
 </tr>
 </thead>
@@ -93,153 +42,8 @@ Mostrar apenas visitantes sem crachá
 
 </table>
 
-<script>
-
-const CSV_URL = "SEU_LINK_CSV";
-
-let impressos = {};
-
-function gerarZPL(nome, empresa, estudo, id){
-
-return `
-^XA
-^CI28
-^PW400
-^LL240
-
-^FO30,30^A0N,25,25^FDVISITANTE^FS
-^FO30,70^A0N,30,30^FD${nome}^FS
-^FO30,120^A0N,20,20^FD${empresa}^FS
-^FO30,150^A0N,20,20^FD${estudo}^FS
-^FO30,190^A0N,15,15^FD${id}^FS
-
-^XZ
-`;
-
-}
-
-function imprimir(nome,empresa,estudo,id,botao){
-
-if(impressos[id]){
-
-let confirmar = confirm("Você tem certeza que deseja reimprimir esse crachá?");
-
-if(!confirmar){
-return;
-}
-
-}
-
-BrowserPrint.getDefaultDevice("printer", function(device){
-
-let zpl = gerarZPL(nome,empresa,estudo,id);
-
-device.send(zpl);
-
-impressos[id] = true;
-
-botao.innerText = "Reimprimir";
-botao.className = "reimprimir";
-
-});
-
-}
-
-function extrairHora(timestamp){
-
-if(!timestamp) return "";
-
-let data = new Date(timestamp);
-
-let horas = String(data.getHours()).padStart(2,'0');
-let minutos = String(data.getMinutes()).padStart(2,'0');
-
-return `${horas}:${minutos}`;
-
-}
-
-function aplicarFiltro(){
-
-let apenas = document.getElementById("apenasNaoImpressos").checked;
-
-let linhas = document.querySelectorAll("#tabela tr");
-
-linhas.forEach(linha=>{
-
-let id = linha.dataset.id;
-
-if(apenas && impressos[id]){
-linha.style.display = "none";
-}else{
-linha.style.display = "";
-}
-
-});
-
-}
-
-async function carregar(){
-
-let resposta = await fetch(CSV_URL);
-let texto = await resposta.text();
-
-let resultado = Papa.parse(texto,{
-header:true,
-skipEmptyLines:true
-});
-
-let dados = resultado.data;
-
-dados.sort((a,b)=>{
-return new Date(b["Carimbo de data/hora"]) - new Date(a["Carimbo de data/hora"]);
-});
-
-let tabela = document.getElementById("tabela");
-
-dados.forEach((linha,index)=>{
-
-let nome = linha["Nome do visitante"];
-let tipo = linha["Tipo de visita"];
-let estudo = linha["Estudo / Protocolo"];
-let id = linha["ID_VISITA"] || ("VIS-"+index);
-let hora = extrairHora(linha["Carimbo de data/hora"]);
-
-if(!nome) return;
-
-let tr = document.createElement("tr");
-
-tr.dataset.id = id;
-
-let classe = impressos[id] ? "" : "novo";
-
-let textoBotao = impressos[id] ? "Reimprimir" : "Imprimir";
-let classeBotao = impressos[id] ? "reimprimir" : "imprimir";
-
-tr.className = classe;
-
-tr.innerHTML = `
-<td>${hora}</td>
-<td>${nome}</td>
-<td>${tipo}</td>
-<td>${estudo}</td>
-<td>
-<button class="${classeBotao}" onclick="imprimir('${nome}','${tipo}','${estudo}','${id}',this)">
-${textoBotao}
-</button>
-</td>
-`;
-
-tabela.appendChild(tr);
-
-});
-
-}
-
-document.getElementById("apenasNaoImpressos").addEventListener("change", aplicarFiltro);
-
-carregar();
-
-</script>
+<script src="app.js"></script>
 
 </body>
+
 </html>
