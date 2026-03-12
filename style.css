@@ -8,7 +8,7 @@ h2{
 margin-bottom:20px;
 }
 
-.filtro{
+.filtro, .config-impressao{
 margin-bottom:20px;
 }
 
@@ -47,4 +47,10 @@ color:white;
 .reimprimir{
 background:#f39c12;
 color:white;
+}
+
+.opcoes{
+display:flex;
+gap:20px;
+align-items:center;
 }

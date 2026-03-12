@@ -47,6 +47,10 @@ return data >= inicioNum && data <= fimNum;
 
 function gerarZPL(nome,empresa,estudo,id){
 
+let tamanho = document.getElementById("tamanhoEtiqueta").value;
+
+if(tamanho === "5x3"){
+
 return `
 ^XA
 ^CI28
@@ -57,10 +61,31 @@ return `
 ^FO30,70^A0N,30,30^FD${nome}^FS
 ^FO30,120^A0N,20,20^FD${empresa}^FS
 ^FO30,150^A0N,20,20^FD${estudo}^FS
-^FO30,190^A0N,15,15^FD${id}^FS
+^FO30,180^A0N,20,20^FD${id}^FS
 
 ^XZ
 `;
+
+}
+
+if(tamanho === "9.5x4"){
+
+return `
+^XA
+^CI28
+^PW760
+^LL320
+
+^FO40,30^A0N,40,40^FDVISITANTE^FS
+^FO40,100^A0N,50,50^FD${nome}^FS
+^FO40,180^A0N,30,30^FD${empresa}^FS
+^FO40,220^A0N,30,30^FD${estudo}^FS
+^FO40,270^A0N,30,30^FD${id}^FS
+
+^XZ
+`;
+
+}
 
 }
 
