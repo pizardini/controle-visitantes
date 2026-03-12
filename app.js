@@ -1,4 +1,4 @@
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSNtcjxYDCz_7brdXFebxJ2gzM3AfN47o7pz1zNUDzajhKUcsA_wX6ZCurO9dffDkuuzV87msFOYHES/pub?gid=1855995648&single=true&output=csv";
+const API_URL = "https://script.google.com/macros/s/AKfycby8V0pXIO2NVrisRSMON5VfaqYgnzz9VVD40fsy2g6f8MoqiKol-WFHpST35-DHh1fe/exec";
 
 function dataHoje(){
 
@@ -22,26 +22,25 @@ partes[0]
 
 }
 
-function dataNumero(data){
+function formatarData(dataISO){
 
-let partes = data.split("/");
+let data = new Date(dataISO);
 
-let dia = partes[0].padStart(2,"0");
-let mes = partes[1].padStart(2,"0");
-let ano = partes[2];
+let dia = String(data.getDate()).padStart(2,"0");
+let mes = String(data.getMonth()+1).padStart(2,"0");
+let ano = data.getFullYear();
 
-return Number(`${ano}${mes}${dia}`);
+return `${dia}/${mes}`;
 
 }
 
 function dentroDoPeriodo(dataFiltro,inicio,fim){
 
-let data = Number(dataFiltro.replaceAll("-",""));
+let data = dataFiltro;
+let dataInicio = inicio.substring(0,10);
+let dataFim = fim.substring(0,10);
 
-let inicioNum = dataNumero(inicio);
-let fimNum = dataNumero(fim);
-
-return data >= inicioNum && data <= fimNum;
+return data >= dataInicio && data <= dataFim;
 
 }
 
@@ -128,14 +127,9 @@ async function carregar(){
 
 let dataFiltro = document.getElementById("dataFiltro").value;
 
-let resposta = await fetch(CSV_URL);
+let resposta = await fetch(API_URL);
 
-let texto = await resposta.text();
-
-let dados = Papa.parse(texto,{
-header:true,
-skipEmptyLines:true
-}).data;
+let dados = await resposta.json();
 
 let tabela = document.getElementById("tabela");
 
@@ -143,18 +137,15 @@ tabela.innerHTML="";
 
 dados.forEach((linha,index)=>{
 
-let nome = linha["Nome do visitante"];
-let tipo = linha["Tipo de visita"];
-let estudo = linha["Estudo / Protocolo"];
-
-let inicio = linha["Data de início da visita"];
-let fim = linha["Data de fim da visita"];
-
-let id = linha["ID_VISITA"] || ("VIS-"+index);
-
+let nome = linha.nome;
+let tipo = linha.tipo;
+let estudo = linha.estudo;
+let inicio = linha.inicio;
+let fim = linha.fim;
+let id = linha.id;
 if(!dentroDoPeriodo(dataFiltro,inicio,fim)) return;
 
-let periodo = `${inicio} → ${fim}`;
+let periodo = `${formatarData(inicio)} → ${formatarData(fim)}`;
 
 let chave = chaveImpressao(id,dataFiltro);
 
