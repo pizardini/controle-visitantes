@@ -125,7 +125,7 @@ async function carregar(){
 
 let dataFiltro = document.getElementById("dataFiltro").value;
 
-let resposta = await fetch(API_URL);
+let resposta = await fetch(API_URL + "?data=" + dataFiltro);
 
 let dados = await resposta.json();
 
