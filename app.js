@@ -44,7 +44,10 @@ function dentroDoPeriodo(dataFiltro,inicio,fim){
 function gerarZPL(nome,empresa,setor,id,inicio,fim){
 
     let tamanho = document.getElementById("tamanhoEtiqueta").value;
-    let dataVisita = `${formatarData(inicio)} → ${formatarData(fim)}`;
+    let dataInicio = formatarData(inicio);
+    let dataFim = formatarData(fim);
+
+    let dataVisita = dataInicio === dataFim ? dataInicio : `${dataInicio} → ${dataFim}`;
 
     if(tamanho === "5x3"){
 
@@ -164,7 +167,10 @@ async function carregar(){
         if(!dentroDoPeriodo(dataFiltro,inicio,fim)) 
             return;
 
-    let periodo = `${formatarData(inicio)} → ${formatarData(fim)}`;
+    let dataInicio = formatarData(inicio);
+    let dataFim = formatarData(fim);
+
+    let periodo = dataInicio === dataFim ? dataInicio : `${dataInicio} → ${dataFim}`;
 
     let chave = chaveImpressao(id,dataFiltro);
 
