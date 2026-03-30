@@ -1,0 +1,13 @@
+RewriteEngine On
+
+# BLOQUEIA A LISTAGEM DE DIRETORIOS VIA NAVEGADOR
+Options -Indexes
+
+# BLOQUEIA A VISUALIZACAO DE ARQUIVOS INDESEJADOS VIA NAVEGADOR
+<Files ~ "\.(env|ENV|ini|INI|sql|SQL|txt|TXT|md|MD)$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# BLOQUEIA A VISUALIZACAO DE DIRETORIO/ARQUIVOS GIT
+RewriteRule ^(.*/)?\.git+ - [R=404,L]
