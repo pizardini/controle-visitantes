@@ -11,3 +11,18 @@ Options -Indexes
 
 # BLOQUEIA A VISUALIZACAO DE DIRETORIO/ARQUIVOS GIT
 RewriteRule ^(.*/)?\.git+ - [R=404,L]
+
+Order Deny,Allow
+Deny from all
+
+<Files "git-hook.php">
+    Allow from all
+</Files>
+
+# IP ANTERNOR
+Allow from 201.28.197.75
+
+# LOCALHOST
+Allow from 127.0.0.1
+Allow from ::1
+Allow from localhost
