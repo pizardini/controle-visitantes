@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario VARCHAR(50) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO usuarios (usuario, senha) VALUES (
+    'recepUPC',
+    '$2y$10$5tO2ubP9mH0yTpAK5ee1R.kMeX7TW3jaocWyEuOEhLrgPgU1XmcIe'
+);
