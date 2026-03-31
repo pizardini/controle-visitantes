@@ -1,7 +1,8 @@
 :root {
-    --verde:       #1a6b3c;
-    --verde-claro: #2e8b57;
-    --verde-bg:    #f0f7f3;
+    --azul:        #0064d2;
+    --azul-claro:  #0ac8f5;
+    --azul-bg:     #c3e6f5;
+    --rosa-logo:   #dc1464;
     --cinza:       #6b7280;
     --borda:       #d1d5db;
     --erro:        #dc2626;
@@ -16,7 +17,7 @@
 
 body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--verde-bg);
+    background: var(--azul-bg);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -55,25 +56,11 @@ body::before {
     margin-bottom: 32px;
 }
 
-.logo-icone {
-    width: 52px;
-    height: 52px;
-    background: var(--verde);
-    border-radius: 14px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 16px;
-}
-
-.logo-icone svg {
-    width: 26px;
-    height: 26px;
-    fill: none;
-    stroke: white;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+.logo-img {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 h1 {
@@ -116,7 +103,7 @@ input {
 }
 
 input:focus {
-    border-color: var(--verde-claro);
+    border-color: var(--azul-claro);
     box-shadow: 0 0 0 3px rgba(46,139,87,0.12);
     background: var(--branco);
 }
@@ -144,7 +131,7 @@ input:focus {
 .btn-entrar {
     width: 100%;
     padding: 12px;
-    background: var(--verde);
+    background: var(--azul);
     color: white;
     border: none;
     border-radius: 8px;
@@ -156,7 +143,7 @@ input:focus {
     transition: background 0.2s, transform 0.1s;
 }
 
-.btn-entrar:hover  { background: var(--verde-claro); }
+.btn-entrar:hover  { background: var(--rosa-logo); }
 .btn-entrar:active { transform: scale(0.98); }
 
 .rodape {

@@ -52,22 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Controle de Visitantes – Acesso</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
     <div class="card">
         <div class="logo-area">
-            <div class="logo-icone">
-                <!-- Ícone de crachá/visitante -->
-                <svg viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="16" rx="2"/>
-                    <circle cx="12" cy="10" r="3"/>
-                    <path d="M6 20c0-3 2.7-5 6-5s6 2 6 5"/>
-                    <line x1="9" y1="4" x2="15" y2="4"/>
-                </svg>
-            </div>
+            <img src="img/logo-ha-rgb-comp.png" alt="Logo Hospital de Amor" class="logo-img">
             <h1>Controle de Visitantes</h1>
-            <p class="subtitulo">Pesquisa Clínica – Hospital de Amor</p>
+            <p class="subtitulo">Pesquisa Clínica – HA</p>
         </div>
 
         <?php if ($erro): ?>
