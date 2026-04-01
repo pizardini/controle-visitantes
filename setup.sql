@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS usuarios (
 );
 
 INSERT INTO usuarios (usuario, senha) VALUES (
-    'recepUPC',
-    '$2y$10$5tO2ubP9mH0yTpAK5ee1R.kMeX7TW3jaocWyEuOEhLrgPgU1XmcIe'
+    'visitas',
+    '$2y$10$G9f5G9cbYUKezBsoFmRPu.9/17wUSB5lqUVdqEtU1kUkDcYYoN7hG'
 );
