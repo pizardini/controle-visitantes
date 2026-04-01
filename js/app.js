@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxzSwNO09FUjhRHzd-ktJpYu9AH4Eu8e7T_Odv1lTRQizD9vNRcLnfFQlwDEwfOSKze/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycby4DuNs37fn8k990Vt4iQyYny7R8KtGKOZVkAGk6-shwQh8sJd50JvbtsAqjzcKiRk/exec";
 
 function dataHoje(){
 
