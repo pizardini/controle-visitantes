@@ -19,8 +19,8 @@ Deny from all
     Allow from all
 </Files>
 
-# IP ANTERNOR (VIVO)
-Allow from 200.153.59.106
+# Insira aqui IP permitido para o acesso
+# Allow from xxx.xx.xx.xx
 
 # LOCALHOST
 Allow from 127.0.0.1
