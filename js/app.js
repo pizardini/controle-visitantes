@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycby8V0pXIO2NVrisRSMON5VfaqYgnzz9VVD40fsy2g6f8MoqiKol-WFHpST35-DHh1fe/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxzSwNO09FUjhRHzd-ktJpYu9AH4Eu8e7T_Odv1lTRQizD9vNRcLnfFQlwDEwfOSKze/exec";
 
 function dataHoje(){
 
@@ -164,8 +164,8 @@ async function carregar(){
     let inicio = linha.inicio;
     let fim = linha.fim;
     let id = linha.id;
-        if(!dentroDoPeriodo(dataFiltro,inicio,fim)) 
-            return;
+        // if(!dentroDoPeriodo(dataFiltro,inicio,fim)) Filtra apenas os resultados do dia
+        //     return;
 
     let dataInicio = formatarData(inicio);
     let dataFim = formatarData(fim);
