@@ -36,7 +36,6 @@ O acesso é protegido por autenticação PHP + MySQL com senhas em hash bcrypt, 
 | Autenticação | Sessões PHP + `password_hash()` bcrypt |
 | Dados | Google Forms + Google Apps Script (Web App) |
 | Impressão | Zebra BrowserPrint + ZPL |
-| Hospedagem | Hostgator (cPanel + PHP + MySQL) |
 | Controle de acesso | `.htaccess` por IP |
 
 ---
