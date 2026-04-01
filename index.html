@@ -1,62 +1,44 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="pt-BR">
 <head>
-
-<meta charset="UTF-8">
-<title>Controle de Visitantes</title>
-
-<link rel="stylesheet" href="css/style.css">
-
-<script src="js/BrowserPrint-3.1.250.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Visitantes – Acesso</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css">
 </head>
-
 <body>
+    <div class="card">
+        <div class="logo-area">
+            <img src="img/logo-ha-rgb-comp.png" alt="Logo Hospital de Amor" class="logo-img">
+            <h1>Controle de Visitantes</h1>
+            <p class="subtitulo">Pesquisa Clínica – HA</p>
+        </div>
 
-<h2>Controle de Visitantes – Pesquisa Clínica</h2>
-<div class="opcoes">
-<div class="filtro">
+        <?php if ($erro): ?>
+            <div class="erro-msg">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <?= htmlspecialchars($erro) ?>
+            </div>
+        <?php endif; ?>
 
-<label>Data da visita:</label>
-<input type="date" id="dataFiltro">
+        <form method="POST" autocomplete="off">
+            <div class="campo">
+                <label for="usuario">Usuário</label>
+                <input type="text" id="usuario" name="usuario"
+                       value="<?= htmlspecialchars($_POST['usuario'] ?? '') ?>"
+                       placeholder="Digite o usuário" required autofocus>
+            </div>
+            <div class="campo">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha"
+                       placeholder="Digite a senha" required>
+            </div>
+            <button type="submit" class="btn-entrar">Entrar</button>
+        </form>
 
-<button id="botaoAtualizar" onclick="carregar()">Atualizar lista</button>
-
-</div>
-<div class="config-impressao">
-
-<label>Tamanho da etiqueta:</label>
-
-<select id="tamanhoEtiqueta">
-<option value="9.5x4">9,5 x 4 cm</option>
-<option value="5x3">5 x 3 cm</option>
-<option value="8x3">8 x 3 cm</option>
-</select>
-
-</div>
-</div>
-
-<table>
-
-<thead>
-<tr>
-<th>Nome</th>
-<th>Tipo</th>
-<th>Empresa</th>
-<th>Setor Responsável</th>
-<th>Período da visita</th>
-<th>Ação</th>
-</tr>
-</thead>
-
-<tbody id="tabela"></tbody>
-
-</table>
-
-<script src="js/app.js"></script>
-
+        <p class="rodape">Hospital de Amor de Barretos &copy; <?= date('Y') ?></p>
+    </div>
 </body>
-
 </html>
